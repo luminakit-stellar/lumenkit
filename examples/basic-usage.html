@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stellar Wallets Kit - Basic Usage</title>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+        
+        .info-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .info-section h3 {
+            margin-top: 0;
+            color: #495057;
+        }
+        
+        .code-block {
+            background: #1e1e1e;
+            color: #f8f8f2;
+            padding: 16px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        
+        .status {
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: 500;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 LumenKit Demo</h1>
+        
+        <div class="button-group">
+            <stellar-wallets-button 
+                button-text="Connect Wallet"
+                id="connectBtn">
+            </stellar-wallets-button>
+            
+            <button id="showModalBtn" style="
+                background: #fddb23;
+                color: #0f0f0f;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 8px;
+                font-weight: 600;
+                cursor: pointer;
+                font-size: 16px;
+            ">
+                Show Wallet Modal
+            </button>
+            
+            <button id="reviewBtn" style="
+                background: #007bff;
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 8px;
+                font-weight: 600;
+                cursor: pointer;
+                font-size: 16px;
+            ">
+                Review Transaction
+            </button>
+        </div>
+        
+        <div class="info-section">
+            <h3>📊 Connection Status</h3>
+            <div id="status" class="status info">
+                No wallet connected
+            </div>
+            <div id="walletInfo" style="display: none;">
+                <strong>Connected Wallet:</strong> <span id="walletName">-</span><br>
+                <strong>Address:</strong> <span id="walletAddress">-</span>
+            </div>
+        </div>
+        
+        <div class="info-section">
+            <h3>🔧 Available Methods</h3>
+            <button id="getAddressBtn" disabled style="
+                background: #28a745;
+                color: white;
+                border: none;
+                padding: 8px 16px;
+                border-radius: 6px;
+                margin: 4px;
+                cursor: pointer;
+            ">
+                Get Address
+            </button>
+            
+            <button id="getNetworkBtn" disabled style="
+                background: #17a2b8;
+                color: white;
+                border: none;
+                padding: 8px 16px;
+                border-radius: 6px;
+                margin: 4px;
+                cursor: pointer;
+            ">
+                Get Network
+            </button>
+            
+            <button id="signMessageBtn" disabled style="
+                background: #ffc107;
+                color: #212529;
+                border: none;
+                padding: 8px 16px;
+                border-radius: 6px;
+                margin: 4px;
+                cursor: pointer;
+            ">
+                Sign Message
+            </button>
+        </div>
+        
+        <div class="info-section">
+            <h3>📝 Console Output</h3>
+            <div id="console" class="code-block" style="height: 200px; overflow-y: auto;">
+                Ready to connect wallet...<br>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <stellar-wallets-modal 
+        id="walletModal"
+        show-modal="false"
+        modal-title="Choose Your Wallet">
+    </stellar-wallets-modal>
+    
+    <stellar-review-transaction-modal 
+        id="reviewModal"
+        show-modal="false">
+    </stellar-review-transaction-modal>
+
+    <script type="module">
+        import { 
+            StellarWalletsKit, 
+            WalletNetwork,
+            StellarWalletsModal,
+            StellarWalletsButton,
+            StellarReviewTransactionModal
+        } from './build/index.mjs';
+
+        // Initialize the kit
+        const kit = new StellarWalletsKit({
+            network: WalletNetwork.TESTNET,
+            allowedWallets: ['freighter', 'albedo', 'rabet', 'lobstr', 'xbull']
+        });
+
+        // Get DOM elements
+        const connectBtn = document.getElementById('connectBtn');
+        const showModalBtn = document.getElementById('showModalBtn');
+        const reviewBtn = document.getElementById('reviewBtn');
+        const walletModal = document.getElementById('walletModal');
+        const reviewModal = document.getElementById('reviewModal');
+        const status = document.getElementById('status');
+        const walletInfo = document.getElementById('walletInfo');
+        const walletName = document.getElementById('walletName');
+        const walletAddress = document.getElementById('walletAddress');
+        const console = document.getElementById('console');
+        const getAddressBtn = document.getElementById('getAddressBtn');
+        const getNetworkBtn = document.getElementById('getNetworkBtn');
+        const signMessageBtn = document.getElementById('signMessageBtn');
+
+        // Console logging function
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const color = type === 'error' ? '#ff6b6b' : type === 'success' ? '#51cf66' : '#74c0fc';
+            console.innerHTML += `<span style="color: ${color}">[${timestamp}]</span> ${message}<br>`;
+            console.scrollTop = console.scrollHeight;
+        }
+
+        // Update UI based on connection status
+        function updateUI(connected = false, wallet = null) {
+            if (connected && wallet) {
+                status.className = 'status success';
+                status.textContent = `Connected to ${wallet.name}`;
+                walletInfo.style.display = 'block';
+                walletName.textContent = wallet.name;
+                walletAddress.textContent = wallet.address || 'Getting address...';
+                
+                // Enable action buttons
+                getAddressBtn.disabled = false;
+                getNetworkBtn.disabled = false;
+                signMessageBtn.disabled = false;
+            } else {
+                status.className = 'status info';
+                status.textContent = 'No wallet connected';
+                walletInfo.style.display = 'none';
+                
+                // Disable action buttons
+                getAddressBtn.disabled = true;
+                getNetworkBtn.disabled = true;
+                signMessageBtn.disabled = true;
+            }
+        }
+
+        // Event listeners
+        connectBtn.addEventListener('wallet-selected', async (event) => {
+            const selectedWallet = event.detail;
+            log(`Wallet selected: ${selectedWallet.name}`, 'success');
+            
+            try {
+                const { address } = await kit.getAddress();
+                updateUI(true, { ...selectedWallet, address });
+                log(`Address retrieved: ${address}`, 'success');
+            } catch (error) {
+                log(`Error getting address: ${error.message}`, 'error');
+                updateUI(false);
+            }
+        });
+
+        showModalBtn.addEventListener('click', () => {
+            walletModal.showModal = true;
+            log('Wallet modal opened');
+        });
+
+        reviewBtn.addEventListener('click', () => {
+            reviewModal.showModal = true;
+            log('Review transaction modal opened');
+        });
+
+        walletModal.addEventListener('wallet-selected', async (event) => {
+            const selectedWallet = event.detail;
+            walletModal.showModal = false;
+            log(`Wallet selected from modal: ${selectedWallet.name}`, 'success');
+            
+            try {
+                const { address } = await kit.getAddress();
+                updateUI(true, { ...selectedWallet, address });
+                log(`Address retrieved: ${address}`, 'success');
+            } catch (error) {
+                log(`Error getting address: ${error.message}`, 'error');
+                updateUI(false);
+            }
+        });
+
+        walletModal.addEventListener('modal-closed', () => {
+            log('Wallet modal closed');
+        });
+
+        reviewModal.addEventListener('modal-closed', () => {
+            log('Review transaction modal closed');
+        });
+
+        // Action button listeners
+        getAddressBtn.addEventListener('click', async () => {
+            try {
+                const { address } = await kit.getAddress();
+                log(`Current address: ${address}`, 'success');
+                walletAddress.textContent = address;
+            } catch (error) {
+                log(`Error getting address: ${error.message}`, 'error');
+            }
+        });
+
+        getNetworkBtn.addEventListener('click', async () => {
+            try {
+                const { network, networkPassphrase } = await kit.getNetwork();
+                log(`Current network: ${network}`, 'success');
+                log(`Network passphrase: ${networkPassphrase}`, 'info');
+            } catch (error) {
+                log(`Error getting network: ${error.message}`, 'error');
+            }
+        });
+
+        signMessageBtn.addEventListener('click', async () => {
+            const message = prompt('Enter message to sign:');
+            if (!message) return;
+            
+            try {
+                const { signedMessage, signerAddress } = await kit.signMessage(message);
+                log(`Message signed successfully!`, 'success');
+                log(`Signer address: ${signerAddress}`, 'info');
+                log(`Signed message: ${signedMessage}`, 'info');
+            } catch (error) {
+                log(`Error signing message: ${error.message}`, 'error');
+            }
+        });
+
+        // Initialize UI
+        updateUI(false);
+        log('LumenKit initialized', 'success');
+        log('Available wallets: Freighter, Albedo, Rabet, LOBSTR, xBull', 'info');
+    </script>
+</body>
+</html>
