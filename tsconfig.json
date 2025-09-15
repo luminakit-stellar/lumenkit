@@ -2,9 +2,10 @@
   "compilerOptions": {
     "skipLibCheck": true,
     "target": "ESNext",
+    "module": "ESNext",
     "outDir": "build",
     "rootDir": "src",
-    "moduleResolution": "Node",
+    "moduleResolution": "node",
     "declaration": true,
     "declarationMap": true,
     "esModuleInterop": true,
