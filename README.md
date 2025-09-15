@@ -17,7 +17,7 @@ A comprehensive TypeScript library for integrating multiple Stellar wallets into
 ### Installation
 
 ```bash
-npm install @lumenkit
+npm install @lumenkit/stellar-wallets
 # or
 yarn add @lumenkit
 # or
@@ -105,7 +105,7 @@ const kit = new StellarWalletsKit({
 ### Theme Customization
 
 ```typescript
-import { ModalThemes, ButtonThemes } from '@creit.tech/stellar-wallets-kit';
+import { ModalThemes, ButtonThemes } from '@lumenkit/stellar-wallets-kit';
 
 // Use built-in themes
 const darkTheme = ModalThemes.DARK;
