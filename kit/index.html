@@ -44,8 +44,8 @@
 <body>
 
 <header>
-  <span>Ambient Tests</span>
-  <div id='buttonWrapper' style="margin-left:auto;"></div>
+  <div id='buttonWrapper'></div>
+  <div id='reviewTransactionWrapper'></div>
 </header>
 
 <main>
@@ -92,6 +92,8 @@
 <script type='module'>
   import {
     StellarWalletsKit,
+    StellarReviewTransactionModal,
+    StellarReviewTransactionButton,
     WalletNetwork,
     allowAllModules,
     XBULL_ID
@@ -137,6 +139,40 @@
   }
 
   createDefaultButton();
+
+  // Review Transaction Modal functionality
+  let reviewModal = null;
+
+  // Create Review Transaction Button
+  function createReviewTransactionButton() {
+    const reviewButton = document.createElement('stellar-review-transaction-button');
+    reviewButton.setAttribute('buttonText', 'Review Transaction');
+    document.querySelector('#reviewTransactionWrapper').appendChild(reviewButton);
+    
+    reviewButton.addEventListener('review-transaction-clicked', function() {
+      console.log('Review Transaction button clicked');
+      
+      if (reviewModal) {
+        throw new Error(`Review Transaction modal is already open`);
+      } else {
+        reviewModal = document.createElement('stellar-review-transaction-modal');
+      }
+
+      reviewModal.setAttribute('showModal', '');
+      document.body.appendChild(reviewModal);
+
+      const closeListener = (event) => {
+        console.log('Modal closed');
+        reviewModal.removeEventListener('modal-closed', closeListener, false);
+        document.body.removeChild(reviewModal);
+        reviewModal = undefined;
+      };
+      
+      reviewModal.addEventListener('modal-closed', closeListener, false);
+    });
+  }
+
+  createReviewTransactionButton();
 
   document.querySelector('#getAddress').addEventListener('click', async function(e) {
     const response = await kit.getAddress({ skipRequestAccess: true });
@@ -189,6 +225,15 @@
     kit.removeButton();
   });
 
+  kit.assignButtons({
+    connectEl: '#externalConnect',
+    disconnectEl: '#externalDisconnect',
+    onConnect: ({ address }) => {
+      console.log('Address requested: ', address);
+      document.querySelector('#publicKey').setAttribute('value', address);
+    },
+    onDisconnect: () => console.log('Disconnected from the button'),
+  })
 </script>
 </body>
 </html>

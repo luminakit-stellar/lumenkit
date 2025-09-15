@@ -2,6 +2,8 @@ export * from './stellar-wallets-kit';
 export { StellarWalletsModal, ModalThemes } from './components/modal/stellar-wallets-modal';
 export { StellarWalletsButton, ButtonThemes } from './components/button/stellar-wallets-button';
 export { StellarSelectorModal } from './components/selector-modal/stellar-selector-modal';
+export { StellarReviewTransactionModal } from './components/review-transaction-modal/stellar-review-transaction-modal';
+export { StellarReviewTransactionButton, ReviewButtonThemes } from './components/review-transaction-button/stellar-review-transaction-button';
 export * from './types';
 export * from './utils';
 

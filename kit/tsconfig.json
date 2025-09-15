@@ -2,8 +2,8 @@
   "compilerOptions": {
     "skipLibCheck": true,
     "target": "ESNext",
-    "outDir": "kit/build",
-    "rootDir": "kit/src",
+    "outDir": "build",
+    "rootDir": "src",
     "moduleResolution": "Node",
     "declaration": true,
     "declarationMap": true,
@@ -34,9 +34,9 @@
 
     "lib": ["es2020", "DOM", "DOM.Iterable"],
     "types": [],
-    "typeRoots": ["node_modules/@types", "kit/src/types"]
+    "typeRoots": ["node_modules/@types", "src/types"]
   },
-  "include": ["kit/src/**/*.ts"],
+  "include": ["src/**/*.ts"],
   "exclude": ["node_modules/**"],
   "compileOnSave": false
 }
