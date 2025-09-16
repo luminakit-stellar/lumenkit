@@ -1,29 +1,42 @@
 import { css } from 'lit';
 
 export const modalDialogStyles = css`
-  @import url('https://fonts.googleapis.com/css2?family=Anton:wght@400&display=swap');
-  
   .dialog-modal {
     position: fixed;
     z-index: 990;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     margin: 0;
     padding: 0;
-    width: 520px;
+    width: 100%;
     height: 600px;
-    max-height: 80vh;
-    border-radius: 24px;
+    max-height: 90vh;
+    border-radius: 1rem 1rem 0 0;
     border-width: 0;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    bottom: 0;
+    left: 0;
+    right: 0;
     overflow: hidden;
     background: #ffffff;
     display: flex;
     flex-direction: column;
   }
 
+  @media screen and (min-width: 768px) {
+    .dialog-modal {
+      bottom: auto;
+      top: 50%;
+      left: 50%;
+      right: auto;
+      transform: translate(-50%, -50%);
+      border-radius: 24px;
+      max-width: 520px;
+      width: 520px;
+    }
+  }
+`;
+
+export const modalDialogBodyStyles = css`
   .modal-container {
     display: flex;
     flex-direction: column;
@@ -124,41 +137,39 @@ export const modalDialogStyles = css`
     transition: all 0.2s ease;
     position: relative;
     overflow: hidden;
-    border: 1px solid transparent;
   }
 
   .wallet-item:hover {
-    background: #f0f1f3;
-    border-color: #fddb23;
+    background: #e8eaed;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
 
   .wallet-item.not-available {
     cursor: not-allowed;
     opacity: 0.6;
+    background: #f8f9fa;
   }
 
   .wallet-item.not-available:hover {
-    background: #f6f7f8;
-    border-color: transparent;
+    background: #f8f9fa;
+    transform: none;
+    box-shadow: none;
   }
 
   .wallet-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    background: transparent;
-    position: relative;
-    overflow: hidden;
   }
 
   .wallet-icon img {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
   }
 
@@ -166,168 +177,132 @@ export const modalDialogStyles = css`
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 4px;
   }
 
   .wallet-name {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
     color: #0f0f0f;
-    margin: 0;
-    line-height: 1.2;
+    margin: 0 0 4px 0;
   }
 
   .wallet-description {
-    font-size: 16px;
-    font-weight: 400;
-    color: #4b5563;
+    font-size: 14px;
+    color: #666666;
     margin: 0;
-    line-height: 1.2;
   }
 
   .not-available-badge {
-    background: #f3f4f6;
-    color: #6b7280;
+    margin-left: auto;
+    padding: 4px 12px;
+    border-radius: 20px;
     font-size: 12px;
     font-weight: 500;
-    padding: 4px 8px;
-    border-radius: 8px;
+    background: #f3f4f6;
+    color: #6b7280;
     border: 1px solid #e5e7eb;
   }
 
-  /* Gradient overlay for wallet items */
-  .wallet-item::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(90deg, 
-      rgba(253, 219, 35, 0) 0%, 
-      rgba(253, 219, 35, 1) 50%, 
-      rgba(253, 219, 35, 0) 100%);
-    opacity: 0;
-    transition: opacity 0.2s ease;
-    pointer-events: none;
+  /* Dark mode styles */
+  [data-theme="dark"] .dialog-modal {
+    background: #1a1a1a;
   }
 
-  .wallet-item:hover::before {
-    opacity: 0.1;
+  [data-theme="dark"] .modal-header {
+    background: #2d2d2d;
+    border-bottom-color: #404040;
   }
 
+  [data-theme="dark"] .modal-title {
+    color: #ffffff;
+  }
 
-  @media screen and (max-width: 768px) {
-    .dialog-modal {
-      width: calc(100% - 32px);
-      height: 85vh;
-      max-height: 85vh;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      margin: 0;
-    }
+  [data-theme="dark"] .close-button {
+    background: #404040;
+  }
 
-    .modal-header {
-      padding: 14px 20px;
-      min-height: 50px;
-    }
+  [data-theme="dark"] .close-button:hover {
+    background: #555555;
+  }
 
-    .modal-title {
-      font-size: 18px;
-      height: 24px;
-    }
+  [data-theme="dark"] .close-button svg {
+    fill: #ffffff;
+  }
 
-    .close-button {
-      width: 24px;
-      height: 24px;
-      border-radius: 10px;
-    }
+  [data-theme="dark"] .modal-content {
+    background: #1a1a1a;
+  }
 
-    .modal-content {
-      padding: 20px;
-    }
+  [data-theme="dark"] .wallet-item {
+    background: #2d2d2d;
+  }
 
-    .wallet-item {
-      padding: 16px;
-    }
+  [data-theme="dark"] .wallet-item:hover {
+    background: #404040;
+  }
 
-    .wallet-icon {
-      width: 44px;
-      height: 44px;
-    }
+  [data-theme="dark"] .wallet-name {
+    color: #ffffff;
+  }
 
-    .wallet-icon img {
-      width: 44px;
-      height: 44px;
-    }
+  [data-theme="dark"] .wallet-description {
+    color: #a0a0a0;
+  }
 
-    .wallet-name {
-      font-size: 16px;
-    }
-
-    .wallet-description {
-      font-size: 14px;
-    }
+  [data-theme="dark"] .not-available-badge {
+    background: #404040;
+    color: #a0a0a0;
+    border-color: #555555;
   }
 `;
 
+export const modalHelpSection = css``;
+
+export const modalWalletsSection = css``;
+
 export const backdropStyles = css`
-  .backdrop {
-    position: fixed;
+  .dialog-modal[open] + .backdrop {
+    background: rgba(0, 0, 0, 0.5);
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 950;
-    transition: opacity 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .backdrop.closing {
-    opacity: 0;
+    width: 100%;
+    height: 100%;
   }
 `;
 
 export const modalAnimations = css`
   .dialog-modal[open] {
-    animation: showModal 0.3s ease normal;
+    -webkit-animation: showModal 0.3s ease normal;
   }
-  
-  @keyframes showModal {
+  @-webkit-keyframes showModal {
     from {
-      transform: translate(-50%, -50%) scale(0.9);
+      transform: translateY(25%);
       opacity: 0;
     }
     to {
-      transform: translate(-50%, -50%) scale(1);
+      transform: translateY(0%);
       opacity: 1;
     }
   }
 
   .dialog-modal.closing {
-    animation: hideModal 0.3s ease normal !important;
+    -webkit-animation: hideModal 0.3s ease normal !important;
   }
-  
-  @keyframes hideModal {
+  @-webkit-keyframes hideModal {
     from {
-      transform: translate(-50%, -50%) scale(1);
+      transform: translateY(0%);
       opacity: 1;
     }
     to {
-      transform: translate(-50%, -50%) scale(0.9);
+      transform: translateY(25%);
       opacity: 0;
     }
   }
 
   .backdrop.closing {
-    animation: hideBackdrop 0.3s ease normal !important;
+    -webkit-animation: hideBackdrop 0.3s ease normal !important;
   }
-  
-  @keyframes hideBackdrop {
+  @-webkit-keyframes hideBackdrop {
     from {
       opacity: 1;
     }

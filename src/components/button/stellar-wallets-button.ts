@@ -169,7 +169,7 @@ export class StellarWalletsButton extends LitElement {
 
     const dropdown = this.showDropdown
       ? html`
-          <section class="dropdown-wrapper">
+          <section class="dropdown-wrapper show">
             <!-- Profile Section -->
             <div class="dropdown-profile-section">
               <div class="profile-avatar">
@@ -237,6 +237,7 @@ export class StellarWalletsButton extends LitElement {
 
     return html`
       <section style=${styleMap(this.getThemeStyles)} class="btn-container">${button} ${dropdown}</section>
+      ${this.showDropdown ? html`<div class="dropdown-backdrop" @click=${this.closeDropdown}></div>` : ''}
     `;
   }
 }

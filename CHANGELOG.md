@@ -5,6 +5,44 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2024-12-19
+
+### Enhanced
+- **Responsive Modal Design** - Updated modal to follow mobile-first responsive design pattern
+- **Mobile Layout** - Modal now appears as bottom sheet on mobile devices with rounded top corners
+- **Desktop Layout** - Modal appears as centered dialog on desktop with proper spacing
+- **Flexible Layout** - Help section and wallets section adapt based on screen size
+- **Improved UX** - Better visual hierarchy and spacing for all screen sizes
+
+### Fixed
+- **Mobile Responsiveness** - Fixed modal positioning and sizing for mobile devices
+- **Layout Issues** - Resolved layout problems on different screen sizes
+- **CSS Structure** - Updated CSS to use proper responsive design patterns
+
+## [1.1.0] - 2024-12-19
+
+### Added
+- **Network Selector Component** - New `stellar-network-selector-button` component for switching between Stellar networks
+- **Real Network Switching** - Automatic switching between Mainnet, Testnet, and Futurenet
+- **Horizon URL Management** - Automatic Horizon endpoint switching based on selected network
+- **Network Passphrase Updates** - Automatic network passphrase updates for transaction signing
+- **Visual Network Indicators** - Color-coded indicators for each network (blue for Mainnet, orange for Testnet, purple for Futurenet)
+- **Network Change Events** - `network-changed` event with full network details
+- **StellarWalletsKit Integration** - `updateNetwork()` method for seamless network switching
+- **Network Status Display** - "Connected" status badge showing active network
+- **Responsive Network Dropdown** - Beautiful dropdown with network descriptions and status
+
+### Enhanced
+- **Button Styling** - Updated button designs to match Figma specifications
+- **Dropdown Functionality** - Improved dropdown interactions with click-outside-to-close
+- **Theme Support** - Added NetworkSelectorThemes for light and dark modes
+- **Documentation** - Comprehensive README updates with network selector examples
+
+### Fixed
+- **Custom Element Registration** - Fixed duplicate registration error
+- **CSS Styling** - Added missing styles for network selector components
+- **Event Handling** - Improved event propagation and handling
+
 ## [1.0.0] - 2024-12-19
 
 ### Added

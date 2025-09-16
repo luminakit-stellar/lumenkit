@@ -45,6 +45,7 @@
 
 <header>
   <div id='reviewTransactionWrapper'></div>
+  <div id='networkSelectorWrapper'></div>
   <div id='buttonWrapper'></div>
 </header>
 
@@ -94,6 +95,7 @@
     StellarWalletsKit,
     StellarReviewTransactionModal,
     StellarReviewTransactionButton,
+    StellarNetworkSelectorButton,
     WalletNetwork,
     allowAllModules,
     XBULL_ID
@@ -102,8 +104,14 @@
   import { LedgerModule } from './build/modules/ledger.module.mjs'
   import { TrezorModule } from './build/modules/trezor.module.mjs';
 
+// Custom element is automatically registered through the build system
+
+  let currentNetwork = WalletNetwork.TESTNET;
+  let currentHorizonUrl = 'https://horizon-testnet.stellar.org';
+  let currentNetworkPassphrase = 'Test SDF Network ; September 2015';
+
   const kit = new StellarWalletsKit({
-    network: WalletNetwork.TESTNET,
+    network: currentNetwork,
     modules: [
       ...allowAllModules(),
       // ...allowAllModules({ filterBy: module => module.productId === XBULL_ID }),
@@ -120,7 +128,7 @@
         description: `This is a development ID, DO NOT sign transactions that come from this request if you are not a developer testing.`,
         name: 'StellarWalletsKit',
         icons: [],
-        network: WalletNetwork.TESTNET,
+        network: currentNetwork,
       }),
     ],
   });
@@ -134,14 +142,87 @@
       },
       onDisconnect: () => console.log('Disconnected from the button'),
       buttonText: 'Connect',
-      horizonUrl: 'https://horizon.stellar.org/'
+      horizonUrl: currentHorizonUrl
     })
   }
 
+  // Network change notification function
+  function showNetworkChangeNotification(networkName) {
+    // Create a simple notification
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #10b981;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 10000;
+      font-family: 'Open Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+    `;
+    notification.textContent = `🌐 Switched to ${networkName}`;
+    document.body.appendChild(notification);
+    
+    // Remove notification after 3 seconds
+    setTimeout(() => {
+      if (notification.parentNode) {
+        notification.parentNode.removeChild(notification);
+      }
+    }, 3000);
+  }
+
   createDefaultButton();
+  createNetworkSelectorButton();
 
   // Review Transaction Modal functionality
   let reviewModal = null;
+
+  // Create Network Selector Button
+  function createNetworkSelectorButton() {
+    console.log('Creating Network Selector Button...');
+    const networkButton = document.createElement('stellar-network-selector-button');
+    networkButton.setAttribute('networkName', 'Stellar Mainnet');
+    
+    const wrapper = document.querySelector('#networkSelectorWrapper');
+    console.log('Wrapper found:', wrapper);
+    
+    if (wrapper) {
+      wrapper.appendChild(networkButton);
+      console.log('Network Selector Button added to DOM');
+    } else {
+      console.error('Network Selector Wrapper not found!');
+    }
+    
+    networkButton.addEventListener('click', function() {
+      console.log('Network Selector button clicked');
+    });
+    
+    networkButton.addEventListener('network-changed', function(event) {
+      console.log('Network changed:', event.detail);
+      
+      // Update current network variables
+      currentNetwork = event.detail.networkId === 'mainnet' ? WalletNetwork.MAINNET : 
+                      event.detail.networkId === 'testnet' ? WalletNetwork.TESTNET : 
+                      WalletNetwork.FUTURENET;
+      currentHorizonUrl = event.detail.horizonUrl;
+      currentNetworkPassphrase = event.detail.networkPassphrase;
+      
+      // Update the kit's network
+      kit.updateNetwork(currentNetwork);
+      
+      // Show notification to user
+      console.log(`🌐 Switched to ${event.detail.networkName}`);
+      console.log(`📍 Horizon URL: ${currentHorizonUrl}`);
+      console.log(`🔑 Network Passphrase: ${currentNetworkPassphrase}`);
+      
+      // You can also show a toast notification or update UI here
+      showNetworkChangeNotification(event.detail.networkName);
+    });
+  }
 
   // Create Review Transaction Button
   function createReviewTransactionButton() {
@@ -185,7 +266,7 @@
     console.log('XDR to sign:', inputElement.value);
 
     const data = await kit.signTransaction(inputElement.value, {
-      networkPassphrase: WalletNetwork.TESTNET,
+      networkPassphrase: currentNetworkPassphrase,
       address: document.querySelector('#publicKey').value,
     });
 
@@ -197,7 +278,7 @@
     console.log('Message to sign:', inputElement.value);
 
     const data = await kit.signMessage(inputElement.value, {
-      networkPassphrase: WalletNetwork.TESTNET,
+      networkPassphrase: currentNetworkPassphrase,
       address: document.querySelector('#publicKey').value,
     });
 

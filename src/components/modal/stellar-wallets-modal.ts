@@ -8,6 +8,9 @@ import { ISupportedWallet, IModalTheme } from '../../types';
 import {
   backdropStyles,
   modalDialogStyles,
+  modalDialogBodyStyles,
+  modalHelpSection,
+  modalWalletsSection,
   modalAnimations,
 } from './styles';
 
@@ -54,6 +57,9 @@ export class StellarWalletsModal extends LitElement {
       }
     `,
     modalDialogStyles,
+    modalDialogBodyStyles,
+    modalHelpSection,
+    modalWalletsSection,
     backdropStyles,
     modalAnimations,
   ];

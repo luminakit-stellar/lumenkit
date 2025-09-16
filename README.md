@@ -6,6 +6,7 @@ A comprehensive TypeScript library for integrating multiple Stellar wallets into
 
 - 🎨 **Modern UI Components** - Beautiful, responsive modals and buttons
 - 🔌 **Multi-Wallet Support** - Connect to 10+ Stellar wallets
+- 🌐 **Network Selector** - Switch between Mainnet, Testnet, and Futurenet
 - 📱 **Mobile-First Design** - Optimized for all screen sizes
 - 🎯 **TypeScript Support** - Full type safety and IntelliSense
 - ⚡ **Lightweight** - Minimal bundle size with tree-shaking
@@ -80,6 +81,24 @@ const { signedTxXdr } = await kit.signTransaction(xdr, {
 </stellar-review-transaction-modal>
 ```
 
+### Network Selector Button
+
+```html
+<stellar-network-selector-button
+  network-name="Stellar Mainnet"
+  selected-network="mainnet"
+  @network-changed="${(e) => console.log('Network changed:', e.detail)}">
+</stellar-network-selector-button>
+```
+
+**Network Selector Features:**
+- 🌐 **Real Network Switching** - Switch between Mainnet, Testnet, and Futurenet
+- 🔄 **Automatic Integration** - Updates StellarWalletsKit network automatically
+- 📍 **Horizon URL Management** - Automatically switches Horizon endpoints
+- 🔑 **Passphrase Updates** - Updates network passphrase for transactions
+- 🎨 **Visual Indicators** - Color-coded network status indicators
+- 📱 **Responsive Design** - Works on all screen sizes
+
 ## 🔧 Configuration
 
 ### Kit Configuration
@@ -102,14 +121,49 @@ const kit = new StellarWalletsKit({
 });
 ```
 
+### Network Selector Integration
+
+```typescript
+import { StellarWalletsKit, WalletNetwork } from '@lumenkit';
+
+// Initialize with default network
+let currentNetwork = WalletNetwork.TESTNET;
+let currentHorizonUrl = 'https://horizon-testnet.stellar.org';
+let currentNetworkPassphrase = 'Test SDF Network ; September 2015';
+
+const kit = new StellarWalletsKit({
+  network: currentNetwork,
+  // ... other config
+});
+
+// Listen for network changes
+document.addEventListener('network-changed', (event) => {
+  const { networkId, networkName, horizonUrl, networkPassphrase } = event.detail;
+  
+  // Update current network variables
+  currentNetwork = networkId === 'mainnet' ? WalletNetwork.MAINNET : 
+                  networkId === 'testnet' ? WalletNetwork.TESTNET : 
+                  WalletNetwork.FUTURENET;
+  currentHorizonUrl = horizonUrl;
+  currentNetworkPassphrase = networkPassphrase;
+  
+  // Update the kit's network
+  kit.updateNetwork(currentNetwork);
+  
+  console.log(`🌐 Switched to ${networkName}`);
+  console.log(`📍 Horizon URL: ${horizonUrl}`);
+});
+```
+
 ### Theme Customization
 
 ```typescript
-import { ModalThemes, ButtonThemes } from '@lumenkit/stellar-wallets-kit';
+import { ModalThemes, ButtonThemes, NetworkSelectorThemes } from '@lumenkit/stellar-wallets-kit';
 
 // Use built-in themes
 const darkTheme = ModalThemes.DARK;
 const lightTheme = ModalThemes.LIGHT;
+const networkTheme = NetworkSelectorThemes.LIGHT;
 
 // Or create custom theme
 const customTheme = {
@@ -165,6 +219,9 @@ class StellarWalletsKit {
   
   // Get current network
   getNetwork(): Promise<{ network: string; networkPassphrase: string }>;
+  
+  // Update network (for network selector integration)
+  updateNetwork(network: WalletNetwork): void;
   
   // Disconnect wallet
   disconnect(): Promise<void>;
@@ -276,6 +333,17 @@ class CustomWalletModule implements ModuleInterface {
 document.addEventListener('wallet-selected', (event) => {
   console.log('Wallet selected:', event.detail);
   // event.detail contains the selected wallet information
+});
+
+// Listen for network changes
+document.addEventListener('network-changed', (event) => {
+  console.log('Network changed:', event.detail);
+  // event.detail contains:
+  // - networkId: 'mainnet' | 'testnet' | 'futurenet'
+  // - networkName: 'Mainnet' | 'Testnet' | 'Futurenet'
+  // - horizonUrl: Horizon endpoint URL
+  // - networkPassphrase: Network passphrase for transactions
+  // - isConnected: boolean
 });
 
 // Listen for modal events

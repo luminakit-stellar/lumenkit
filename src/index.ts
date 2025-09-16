@@ -4,6 +4,7 @@ export { StellarWalletsButton, ButtonThemes } from './components/button/stellar-
 export { StellarSelectorModal } from './components/selector-modal/stellar-selector-modal';
 export { StellarReviewTransactionModal } from './components/review-transaction-modal/stellar-review-transaction-modal';
 export { StellarReviewTransactionButton, ReviewButtonThemes } from './components/review-transaction-button/stellar-review-transaction-button';
+export { StellarNetworkSelectorButton, NetworkSelectorThemes } from './components/network-selector-button/stellar-network-selector-button';
 export * from './types';
 export * from './utils';
 
