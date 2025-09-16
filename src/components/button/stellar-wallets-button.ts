@@ -47,7 +47,7 @@ export class StellarWalletsButton extends LitElement {
   ];
 
   @property({ type: String, reflect: true })
-  buttonText: string = 'Connect';
+  buttonText: string = 'Connect Wallet';
 
   @state()
   showDropdown: boolean = false;
@@ -159,7 +159,11 @@ export class StellarWalletsButton extends LitElement {
                 </svg>
               </div>
             `
-          : this.buttonText}
+          : html`
+              <div class="btn-content-connect">
+                <span class="connect-text">${this.buttonText}</span>
+              </div>
+            `}
       </button>
     `;
 
@@ -207,40 +211,16 @@ export class StellarWalletsButton extends LitElement {
               </div>
               
               <div class="transactions-list">
-                <!-- Sample transaction items -->
+                <!-- Low balance transaction item -->
                 <div class="transaction-item">
-                  <div class="transaction-icon pending">⏳</div>
+                  <div class="transaction-icon low-balance">⚠️</div>
                   <div class="transaction-details">
-                    <div class="transaction-title">Swap XLM for USDC</div>
-                    <div class="transaction-status">Pending</div>
+                    <div class="transaction-title">Low Balance Warning</div>
+                    <div class="transaction-status">Balance below 10 XLM</div>
                   </div>
                   <div class="transaction-amount">
-                    <div class="amount">-1,000 XLM</div>
-                    <div class="time">Just now</div>
-                  </div>
-                </div>
-
-                <div class="transaction-item">
-                  <div class="transaction-icon failed">❌</div>
-                  <div class="transaction-details">
-                    <div class="transaction-title">Add Liquidity</div>
-                    <div class="transaction-status">Failed</div>
-                  </div>
-                  <div class="transaction-amount">
-                    <div class="amount">-500 XLM</div>
-                    <div class="time">2 min ago</div>
-                  </div>
-                </div>
-
-                <div class="transaction-item">
-                  <div class="transaction-icon success">✅</div>
-                  <div class="transaction-details">
-                    <div class="transaction-title">Received</div>
-                    <div class="transaction-status">Confirmed</div>
-                  </div>
-                  <div class="transaction-amount">
-                    <div class="amount">+2,867 XLM</div>
-                    <div class="time">1 hour ago</div>
+                    <div class="amount">${this.accountBalance || '0.00'} XLM</div>
+                    <div class="time">Current</div>
                   </div>
                 </div>
               </div>

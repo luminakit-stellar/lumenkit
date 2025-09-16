@@ -77,12 +77,12 @@ export class StellarReviewTransactionButton extends LitElement {
   override render() {
     const button = html`
       <button @click=${this.onButtonClicked} class="btn">
-        ${this.buttonText}
-
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M9 12L11 14L15 10" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-          <circle cx="12" cy="12" r="9" stroke-width="1.5" />
-        </svg>
+        <div class="btn-content-connect">
+          <div class="review-text">
+            <div class="review-line-1">Review</div>
+            <div class="review-line-2">Transaction</div>
+          </div>
+        </div>
       </button>
     `;
 

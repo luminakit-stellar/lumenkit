@@ -8,19 +8,25 @@ export const buttonContainer = css`
 
 export const buttonStyles = css`
   .btn {
-    background: #ffffff;
-    border: 2px solid #e6e6e6;
+    background: #fddb23;
+    border: none;
     border-radius: 36px;
     cursor: pointer;
     padding: 0;
     display: flex;
     align-items: center;
+    justify-content: center;
     line-height: 100%;
     margin: 0;
     font-family: 'Open Sans', arial, sans-serif;
     width: 220px;
     height: 44px;
     position: relative;
+    transition: all 0.2s ease;
+  }
+
+  .btn:hover {
+    background: #f59e0b;
   }
 
   .btn-content {
@@ -30,6 +36,53 @@ export const buttonStyles = css`
     height: 100%;
     padding: 0 12px;
     gap: 12px;
+  }
+
+  .btn-content-connect {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  .connect-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: #171717;
+    letter-spacing: 0.5px;
+  }
+
+  .review-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+  }
+
+  .review-line-1 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #171717;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+  }
+
+  .review-line-2 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #171717;
+    letter-spacing: 0.5px;
+  }
+
+  /* Connected state styles */
+  .btn:has(.btn-content) {
+    background: #ffffff;
+    border: 2px solid #e6e6e6;
+  }
+
+  .btn:has(.btn-content):hover {
+    background: #ffffff;
   }
 
   .avatar-container {
@@ -75,8 +128,29 @@ export const buttonStyles = css`
 
   @media (prefers-color-scheme: dark) {
     .btn {
-      background-color: #161616;
+      background: #fddb23;
+    }
+
+    .btn:hover {
+      background: #f59e0b;
+    }
+
+    .btn:has(.btn-content) {
+      background: #161616;
       border-color: #404040;
+    }
+
+    .btn:has(.btn-content):hover {
+      background: #161616;
+    }
+
+    .connect-text {
+      color: #171717;
+    }
+
+    .review-line-1,
+    .review-line-2 {
+      color: #171717;
     }
 
     .account-label {
@@ -278,6 +352,11 @@ export const dropdownWrapper = css`
   .transaction-icon.success {
     background: #d1fae5;
     color: #10b981;
+  }
+
+  .transaction-icon.low-balance {
+    background: #fef3c7;
+    color: #f59e0b;
   }
 
   .transaction-details {
