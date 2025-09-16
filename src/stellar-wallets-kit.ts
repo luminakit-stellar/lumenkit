@@ -72,7 +72,7 @@ export class StellarWalletsKit implements KitActions {
    * There are wallets that are by default available since they either don't need to be installed or have a fallback
    */
   public async getSupportedWallets(): Promise<ISupportedWallet[]> {
-    return Promise.all(
+    const walletList = await Promise.all(
       this.modules.map(async (mod: ModuleInterface): Promise<ISupportedWallet> => {
         const timer: Promise<false> = new Promise(r => setTimeout(() => r(false), 500));
         return {
@@ -88,6 +88,22 @@ export class StellarWalletsKit implements KitActions {
         };
       })
     );
+
+    // Add mocked passkey option at position 0 (top of the list)
+    const passkeyWallet: ISupportedWallet = {
+      id: 'passkey',
+      name: 'Passkey',
+      type: 'HOT_WALLET',
+      icon: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iOCIgZmlsbD0iIzAwN0FGRiIvPgo8cGF0aCBkPSJNMTIgMjBMMTYgMjRMMjggMTIiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPgo=',
+      isAvailable: false,
+      isPlatformWrapper: false,
+      url: 'https://passkey.dev',
+    };
+
+    // Insert passkey at position 0 (top of the list)
+    walletList.unshift(passkeyWallet);
+
+    return walletList;
   }
 
   public setWallet(id: string): void {

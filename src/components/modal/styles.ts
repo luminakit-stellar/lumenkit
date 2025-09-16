@@ -203,6 +203,33 @@ export const modalDialogBodyStyles = css`
     border: 1px solid #e5e7eb;
   }
 
+  .exclusive-badge {
+    margin-left: auto;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    color: #ffffff;
+    border: none;
+    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+    }
+    50% {
+      box-shadow: 0 4px 16px rgba(255, 107, 107, 0.5);
+    }
+    100% {
+      box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+    }
+  }
+
   /* Dark mode styles */
   [data-theme="dark"] .dialog-modal {
     background: #1a1a1a;
@@ -253,6 +280,12 @@ export const modalDialogBodyStyles = css`
     background: #404040;
     color: #a0a0a0;
     border-color: #555555;
+  }
+
+  [data-theme="dark"] .exclusive-badge {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.4);
   }
 `;
 

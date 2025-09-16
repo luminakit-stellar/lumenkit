@@ -157,8 +157,12 @@ export class StellarWalletsModal extends LitElement {
    *
    */
   private getSortedList(): ISupportedWallet[] {
+    // Extract passkey wallet first to ensure it appears at the top
+    const passkeyWallet = this.allowedWallets.value!.find(wallet => wallet.id === 'passkey');
+    const otherWallets = this.allowedWallets.value!.filter(wallet => wallet.id !== 'passkey');
+
     const sortedWallets: { available: ISupportedWallet[]; unavailable: ISupportedWallet[] } =
-      this.allowedWallets.value!.reduce(
+      otherWallets.reduce(
         (all: { available: ISupportedWallet[]; unavailable: ISupportedWallet[] }, current: ISupportedWallet) => {
           return {
             available: current.isAvailable ? [...all.available, current] : all.available,
@@ -177,27 +181,31 @@ export class StellarWalletsModal extends LitElement {
       usedWalletsIds = [];
     }
 
+    let sortedOtherWallets: ISupportedWallet[];
     if (usedWalletsIds.length === 0) {
-      return [...sortedWallets.available, ...sortedWallets.unavailable];
-    }
-
-    const usedWallets: ISupportedWallet[] = [];
-    const nonUsedWallets: ISupportedWallet[] = [];
-    for (const availableWallet of sortedWallets.available) {
-      if (usedWalletsIds.find((id: string): boolean => id === availableWallet.id)) {
-        usedWallets.push(availableWallet);
-      } else {
-        nonUsedWallets.push(availableWallet);
+      sortedOtherWallets = [...sortedWallets.available, ...sortedWallets.unavailable];
+    } else {
+      const usedWallets: ISupportedWallet[] = [];
+      const nonUsedWallets: ISupportedWallet[] = [];
+      for (const availableWallet of sortedWallets.available) {
+        if (usedWalletsIds.find((id: string): boolean => id === availableWallet.id)) {
+          usedWallets.push(availableWallet);
+        } else {
+          nonUsedWallets.push(availableWallet);
+        }
       }
+
+      sortedOtherWallets = [
+        ...usedWallets.sort((a: ISupportedWallet, b: ISupportedWallet) => {
+          return usedWalletsIds.indexOf(a.id) - usedWalletsIds.indexOf(b.id);
+        }),
+        ...nonUsedWallets,
+        ...sortedWallets.unavailable,
+      ];
     }
 
-    return [
-      ...usedWallets.sort((a: ISupportedWallet, b: ISupportedWallet) => {
-        return usedWalletsIds.indexOf(a.id) - usedWalletsIds.indexOf(b.id);
-      }),
-      ...nonUsedWallets,
-      ...sortedWallets.unavailable,
-    ];
+    // Return passkey first, then all other wallets
+    return passkeyWallet ? [passkeyWallet, ...sortedOtherWallets] : sortedOtherWallets;
   }
 
   private getPlatformWrapper(): ISupportedWallet | undefined {
@@ -259,7 +267,8 @@ export class StellarWalletsModal extends LitElement {
                         <h3 class="wallet-name">${item.name}</h3>
                         <p class="wallet-description">${this.getWalletDescription(item)}</p>
                       </div>
-                      ${!item.isAvailable ? html`<span class="not-available-badge">${this.notAvailableText}</span>` : ''}
+                      ${item.id === 'passkey' ? html`<span class="exclusive-badge">Coming soon...</span>` : ''}
+                      ${!item.isAvailable && item.id !== 'passkey' ? html`<span class="not-available-badge">${this.notAvailableText}</span>` : ''}
                     </li>
                   `
               )}
@@ -277,16 +286,17 @@ export class StellarWalletsModal extends LitElement {
 
   private getWalletDescription(wallet: ISupportedWallet): string {
     const descriptions: { [key: string]: string } = {
-      'freighter': 'Wallet oficial da Stellar Foundation',
-      'lobstr': 'Interface amigável e recursos avançados',
-      'albedo': 'Wallet web segura, sem extensão',
-      'walletconnect': 'Conecte wallets mobile via QR',
-      'rabet': 'Wallet com recursos DeFi integrados',
-      'xbull': 'Wallet segura e confiável',
-      'ledger': 'Hardware wallet para máxima segurança',
-      'trezor': 'Hardware wallet líder do mercado',
+      'passkey': 'Secure biometric authentication',
+      'freighter': 'Official wallet by Stellar Foundation',
+      'lobstr': 'User-friendly interface and advanced features',
+      'albedo': 'Secure web wallet, no extension needed',
+      'walletconnect': 'Connect mobile wallets via QR',
+      'rabet': 'Wallet with integrated DeFi features',
+      'xbull': 'Secure and reliable wallet',
+      'ledger': 'Hardware wallet for maximum security',
+      'trezor': 'Market-leading hardware wallet',
       'klever': 'Multi-blockchain wallet',
-      'hana': 'Wallet simples e intuitiva'
+      'hana': 'Simple and intuitive wallet'
     };
     
     return descriptions[wallet.id.toLowerCase()] || 'Conecte sua wallet para começar';
