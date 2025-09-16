@@ -58,6 +58,7 @@
     "@ledgerhq/hw-transport": "6.31.4",
     "@ledgerhq/hw-transport-webusb": "6.29.4",
     "@lobstrco/signer-extension-api": "1.0.0-beta.0",
+    "@lumenkit/stellar-wallets": "^1.0.1",
     "@ngneat/elf": "2.5.1",
     "@ngneat/elf-devtools": "1.3.0",
     "@ngneat/elf-entities": "5.0.2",
