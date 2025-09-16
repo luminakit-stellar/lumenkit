@@ -85,8 +85,8 @@ const { signedTxXdr } = await kit.signTransaction(xdr, {
 
 ```html
 <stellar-network-selector-button
-  network-name="Stellar Mainnet"
-  selected-network="mainnet"
+  network-name="Stellar Testnet"
+  selected-network="testnet"
   @network-changed="${(e) => console.log('Network changed:', e.detail)}">
 </stellar-network-selector-button>
 ```

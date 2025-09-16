@@ -28,61 +28,161 @@
       padding: 0.5rem 1rem;
       align-items: center;
       justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo {
+      height: 32px;
+      width: auto;
+      max-width: 200px;
+    }
+
+    .header-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #333;
+      margin: 0;
+    }
+
+    .header-controls {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    #networkSelectorWrapper {
+      transition: all 0.3s ease-in-out;
+      opacity: 0;
+      transform: translateX(10px);
+    }
+
+    #networkSelectorWrapper.show {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1rem;
+        gap: 0.75rem;
+      }
+
+      .header-controls {
+        width: 100%;
+        justify-content: space-between;
+        gap: 0.75rem;
+      }
+
+      .logo {
+        height: 28px;
+        max-width: 150px;
+      }
+
+      .header-title {
+        font-size: 1rem;
+      }
+
+      #networkSelectorWrapper {
+        order: 1; /* Show network selector above button on mobile */
+      }
+    }
+
+    @media (max-width: 480px) {
+      header {
+        padding: 0.75rem;
+      }
+
+      .header-controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+      }
+
+      .logo {
+        height: 24px;
+        max-width: 120px;
+      }
+
+      .header-title {
+        font-size: 0.9rem;
+      }
     }
 
     main {
       padding: 1rem;
       display: flex;
       flex-direction: column;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Responsive improvements for main content */
+    @media (max-width: 768px) {
+      main {
+        padding: 0.75rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      main {
+        padding: 0.5rem;
+      }
     }
 
     input, textarea, button {
       padding: 0.5rem 1rem;
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    /* Responsive form elements */
+    @media (max-width: 768px) {
+      input, textarea, button {
+        padding: 0.75rem;
+        font-size: 16px; /* Prevents zoom on iOS */
+      }
+    }
+
+    @media (max-width: 480px) {
+      input, textarea, button {
+        padding: 0.5rem;
+      }
     }
   </style>
 </head>
 <body>
 
 <header>
-  <div id='reviewTransactionWrapper'></div>
-  <div id='networkSelectorWrapper'></div>
-  <div id='buttonWrapper'></div>
+  <!-- <div id='reviewTransactionWrapper'></div> -->
+     <div class="header-logo">
+       <p>LumenKit</p>
+     </div>
+   <div class="header-controls">
+    <div id='networkSelectorWrapper' style="display: none;"></div>
+    <div id='reviewTransactionWrapper'></div>
+    <div id='buttonWrapper'></div>
+   </div>
+  
 </header>
 
 <main>
-  <label for='publicKey'>Public key</label>
-  <br>
-  <input placeholder='Use the connect button to fetch the public key' id='publicKey' type='text'>
-  <br>
-  <button id='getAddress'>Get Address</button>
-  <br>
-  <label for='xdrTextArea'>XDR to sign</label>
-  <br>
-  <textarea rows='10' id='xdrTextArea'></textarea>
-  <br>
-  <button id='signButton'>Sign XDR</button>
-  <br>
-  <pre id='signedXdr'></pre>
-
-  <br>
-  <br>
-  <label for='signMessageTextArea'>Sign Message</label>
-  <br>
-  <textarea rows='10' id='signMessageTextArea'></textarea>
-  <br>
-  <button id='signMessageButton'>Sign Message</button>
-  <br>
-  <pre id='signedMessage'></pre>
-</main>
-
-<br><br>
-<button id='externalButton'>Connect with external button</button>
-<br><br>
-<div>
-  <button id='createButton'>Create a button on the header</button>
-  <button id='removeButton'>Remove the button from the header</button>
-</div>
-<br><br>
 
 <script type='module'>
   import { Buffer } from 'buffer';
@@ -100,15 +200,21 @@
     allowAllModules,
     XBULL_ID
   } from './build/index.mjs';
+  import { setNetwork } from './build/index.mjs';
   import { WalletConnectModule, WalletConnectAllowedMethods } from './build/modules/walletconnect.module.mjs'
   import { LedgerModule } from './build/modules/ledger.module.mjs'
   import { TrezorModule } from './build/modules/trezor.module.mjs';
 
 // Custom element is automatically registered through the build system
 
+  // Always start with testnet
   let currentNetwork = WalletNetwork.TESTNET;
   let currentHorizonUrl = 'https://horizon-testnet.stellar.org';
   let currentNetworkPassphrase = 'Test SDF Network ; September 2015';
+  
+  console.log('🌐 Initializing with Testnet network');
+  console.log('📍 Horizon URL:', currentHorizonUrl);
+  console.log('🔑 Network Passphrase:', currentNetworkPassphrase);
 
   const kit = new StellarWalletsKit({
     network: currentNetwork,
@@ -139,8 +245,28 @@
       onConnect: ({ address }) => {
         console.log('Address requested: ', address);
         document.querySelector('#publicKey').setAttribute('value', address);
+        
+        // Show network selector when connected
+        const networkSelector = document.querySelector('#networkSelectorWrapper');
+        if (networkSelector) {
+          networkSelector.style.display = 'block';
+          setTimeout(() => {
+            networkSelector.classList.add('show');
+          }, 10);
+        }
       },
-      onDisconnect: () => console.log('Disconnected from the button'),
+      onDisconnect: () => {
+        console.log('Disconnected from the button');
+        
+        // Hide network selector when disconnected
+        const networkSelector = document.querySelector('#networkSelectorWrapper');
+        if (networkSelector) {
+          networkSelector.classList.remove('show');
+          setTimeout(() => {
+            networkSelector.style.display = 'none';
+          }, 300);
+        }
+      },
       buttonText: 'Connect',
       horizonUrl: currentHorizonUrl
     })
@@ -175,8 +301,31 @@
     }, 3000);
   }
 
+  // Ensure testnet is always the default
+  function ensureTestnetDefault() {
+    // Force kit to use testnet
+    setNetwork(WalletNetwork.TESTNET);
+    console.log('🔄 Forced kit to use Testnet network');
+  }
+
+  // Theme detection and logo switching
+  function updateLogoForTheme() {
+    const logo = document.querySelector('.logo');
+    if (!logo) return;
+    
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const isDarkTheme = document.body.classList.contains('dark-theme') || prefersDark;
+    
+    logo.src = isDarkTheme ? 'public/logo-white.svg' : 'public/logo-black.svg';
+  }
+
+  // Listen for theme changes
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateLogoForTheme);
+
   createDefaultButton();
   createNetworkSelectorButton();
+  ensureTestnetDefault();
+  updateLogoForTheme();
 
   // Review Transaction Modal functionality
   let reviewModal = null;
@@ -185,7 +334,8 @@
   function createNetworkSelectorButton() {
     console.log('Creating Network Selector Button...');
     const networkButton = document.createElement('stellar-network-selector-button');
-    networkButton.setAttribute('networkName', 'Stellar Mainnet');
+    networkButton.setAttribute('networkName', 'Stellar Testnet');
+    networkButton.setAttribute('selectedNetwork', 'testnet');
     
     const wrapper = document.querySelector('#networkSelectorWrapper');
     console.log('Wrapper found:', wrapper);
@@ -193,6 +343,13 @@
     if (wrapper) {
       wrapper.appendChild(networkButton);
       console.log('Network Selector Button added to DOM');
+      
+      // Force initialization with testnet
+      setTimeout(() => {
+        networkButton.selectedNetwork = 'testnet';
+        networkButton.networkName = 'Stellar Testnet';
+        console.log('Forced initialization with testnet');
+      }, 100);
     } else {
       console.error('Network Selector Wrapper not found!');
     }
@@ -212,15 +369,20 @@
       currentNetworkPassphrase = event.detail.networkPassphrase;
       
       // Update the kit's network
-      kit.updateNetwork(currentNetwork);
+      setNetwork(currentNetwork);
+      
+      // Format network name to always start with "Stellar"
+      const networkName = event.detail.networkName.startsWith('Stellar') 
+        ? event.detail.networkName 
+        : `Stellar ${event.detail.networkName}`;
       
       // Show notification to user
-      console.log(`🌐 Switched to ${event.detail.networkName}`);
+      console.log(`🌐 Switched to ${networkName}`);
       console.log(`📍 Horizon URL: ${currentHorizonUrl}`);
       console.log(`🔑 Network Passphrase: ${currentNetworkPassphrase}`);
       
       // You can also show a toast notification or update UI here
-      showNetworkChangeNotification(event.detail.networkName);
+      showNetworkChangeNotification(networkName);
     });
   }
 
@@ -312,8 +474,28 @@
     onConnect: ({ address }) => {
       console.log('Address requested: ', address);
       document.querySelector('#publicKey').setAttribute('value', address);
+      
+      // Show network selector when connected
+      const networkSelector = document.querySelector('#networkSelectorWrapper');
+      if (networkSelector) {
+        networkSelector.style.display = 'block';
+        setTimeout(() => {
+          networkSelector.classList.add('show');
+        }, 10);
+      }
     },
-    onDisconnect: () => console.log('Disconnected from the button'),
+    onDisconnect: () => {
+      console.log('Disconnected from the button');
+      
+      // Hide network selector when disconnected
+      const networkSelector = document.querySelector('#networkSelectorWrapper');
+      if (networkSelector) {
+        networkSelector.classList.remove('show');
+        setTimeout(() => {
+          networkSelector.style.display = 'none';
+        }, 300);
+      }
+    },
   })
 </script>
 </body>

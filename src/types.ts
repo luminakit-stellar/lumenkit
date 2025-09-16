@@ -198,3 +198,79 @@ export interface ModuleInterface extends KitActions {
    */
   isPlatformWrapper?(): Promise<boolean>;
 }
+
+export interface ITransaction {
+  id: string;
+  hash: string;
+  created_at: string;
+  successful: boolean;
+  source_account: string;
+  fee_paid: string;
+  operation_count: number;
+  memo?: string;
+  memo_type?: string;
+  paging_token: string;
+  ledger: number;
+  operations: IOperation[];
+}
+
+export interface IOperation {
+  id: string;
+  paging_token: string;
+  transaction_successful: boolean;
+  source_account: string;
+  type: string;
+  type_i: number;
+  created_at: string;
+  transaction_hash: string;
+  asset_type?: string;
+  asset_code?: string;
+  asset_issuer?: string;
+  amount?: string;
+  from?: string;
+  to?: string;
+  starting_balance?: string;
+  funder?: string;
+  account?: string;
+  trustor?: string;
+  trustee?: string;
+  limit?: string;
+  asset?: {
+    type: string;
+    code?: string;
+    issuer?: string;
+  };
+  source_asset_type?: string;
+  source_asset_code?: string;
+  source_asset_issuer?: string;
+  destination_asset_type?: string;
+  destination_asset_code?: string;
+  destination_asset_issuer?: string;
+  price?: string;
+  selling_asset_type?: string;
+  selling_asset_code?: string;
+  selling_asset_issuer?: string;
+  buying_asset_type?: string;
+  buying_asset_code?: string;
+  buying_asset_issuer?: string;
+  offer_id?: string;
+  amount_sold?: string;
+  amount_bought?: string;
+  price_r?: {
+    n: number;
+    d: number;
+  };
+  price_n?: number;
+  price_d?: number;
+}
+
+export interface ITransactionResponse {
+  _links: {
+    self: { href: string };
+    next: { href: string };
+    prev: { href: string };
+  };
+  _embedded: {
+    records: ITransaction[];
+  };
+}

@@ -42,10 +42,10 @@ export class StellarNetworkSelectorButton extends LitElement {
   ];
 
   @property({ type: String, reflect: true })
-  networkName: string = 'Stellar Mainnet';
+  networkName: string = 'Stellar Testnet';
 
   @property({ type: String, reflect: true })
-  selectedNetwork: string = 'mainnet';
+  selectedNetwork: string = 'testnet';
 
   @state()
   showDropdown: boolean = false;
@@ -67,27 +67,27 @@ export class StellarNetworkSelectorButton extends LitElement {
   private networks = [
     {
       id: 'mainnet',
-      name: 'Mainnet',
+      name: 'Stellar Mainnet',
       description: 'Production network',
-      status: 'Connected',
+      status: '',
       indicatorClass: 'mainnet',
       horizonUrl: 'https://horizon.stellar.org',
       networkPassphrase: 'Public Global Stellar Network ; September 2015',
-      isConnected: true
-    },
-    {
-      id: 'testnet',
-      name: 'Testnet',
-      description: 'Test environment',
-      status: '',
-      indicatorClass: 'testnet',
-      horizonUrl: 'https://horizon-testnet.stellar.org',
-      networkPassphrase: 'Test SDF Network ; September 2015',
       isConnected: false
     },
     {
+      id: 'testnet',
+      name: 'Stellar Testnet',
+      description: 'Test environment',
+      status: 'Connected',
+      indicatorClass: 'testnet',
+      horizonUrl: 'https://horizon-testnet.stellar.org',
+      networkPassphrase: 'Test SDF Network ; September 2015',
+      isConnected: true
+    },
+    {
       id: 'futurenet',
-      name: 'Futurenet',
+      name: 'Stellar Futurenet',
       description: 'Preview features',
       status: '',
       indicatorClass: 'futurenet',
@@ -174,7 +174,7 @@ export class StellarNetworkSelectorButton extends LitElement {
 
     const dropdown = this.showDropdown
       ? html`
-          <section class="dropdown-wrapper network-dropdown">
+          <section class="dropdown-wrapper network-dropdown ${this.showDropdown ? 'show' : ''}">
             <!-- Header -->
             <div class="network-dropdown-header">
               <h3 class="network-dropdown-title">Select Network</h3>
@@ -204,7 +204,11 @@ export class StellarNetworkSelectorButton extends LitElement {
       : '';
 
     return html`
-      <section style=${styleMap(this.getThemeStyles)} class="btn-container">${button} ${dropdown}</section>
+      <section style=${styleMap(this.getThemeStyles)} class="btn-container">
+        ${button} 
+        ${dropdown}
+        ${this.showDropdown ? html`<div class="network-dropdown-backdrop" @click=${this.closeDropdown}></div>` : ''}
+      </section>
     `;
   }
 }

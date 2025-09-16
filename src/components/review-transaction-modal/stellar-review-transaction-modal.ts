@@ -51,7 +51,7 @@ export class StellarReviewTransactionModal extends LitElement {
     return html`
       <div class="modal-container">
         <div class="modal-header">
-          <h2 class="modal-title">Review Transaction</h2>
+          <h2 class="modal-title">Show Audit Transaction</h2>
           <button @click=${this.closeModal} class="close-button">
             <svg xmlns="http://www.w3.org/2000/svg" fill="#000000" height="16px" width="16px" viewBox="0 0 490 490">
               <polygon
@@ -78,7 +78,7 @@ export class StellarReviewTransactionModal extends LitElement {
               </div>
               <div class="detail-item">
                 <span class="label">Network:</span>
-                <span class="value">Stellar Mainnet</span>
+                <span class="value">Stellar Testnet</span>
               </div>
             </div>
             <div class="xdr-section">

@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.2] - 2024-12-19
+
+### Enhanced
+- **Profile Dropdown Responsive** - Updated profile dropdown to follow mobile-first responsive design pattern
+- **Mobile Bottom Sheet** - Profile dropdown now appears as bottom sheet on mobile devices
+- **Desktop Positioning** - Profile dropdown maintains absolute positioning on desktop
+- **Backdrop Integration** - Added backdrop overlay for mobile profile dropdown
+- **Smooth Animations** - Added smooth slide-up animations for mobile dropdowns
+- **Consistent UX** - Both modal and profile dropdown now follow the same responsive pattern
+
+### Fixed
+- **Mobile Responsiveness** - Fixed profile dropdown positioning and sizing for mobile devices
+- **Touch Interactions** - Improved touch interactions for mobile users
+- **Layout Consistency** - Ensured consistent responsive behavior across all components
+
 ## [1.1.1] - 2024-12-19
 
 ### Enhanced

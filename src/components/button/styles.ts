@@ -25,6 +25,15 @@ export const buttonStyles = css`
     transition: all 0.2s ease;
   }
 
+  /* Mobile responsive styles for main button */
+  @media screen and (max-width: 768px) {
+    .btn {
+      width: 100%;
+      max-width: 280px;
+      min-width: 200px;
+    }
+  }
+
   .btn:hover {
     background: #f59e0b;
   }
@@ -400,6 +409,53 @@ export const dropdownWrapper = css`
     color: #f59e0b;
   }
 
+  .transaction-icon.loading {
+    background: #dbeafe;
+    color: #3b82f6;
+  }
+
+  .transaction-icon.error {
+    background: #fef2f2;
+    color: #ef4444;
+  }
+
+  .transaction-item.error {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+  }
+
+  .transaction-item.loading {
+    background: #f0f9ff;
+    border: 1px solid #bae6fd;
+  }
+
+  .transaction-item.failed {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+  }
+
+  .retry-button {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 60px;
+  }
+
+  .retry-button:hover:not(:disabled) {
+    background: #2563eb;
+  }
+
+  .retry-button:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+  }
+
   .transaction-details {
     flex: 1;
     display: flex;
@@ -545,6 +601,34 @@ export const dropdownWrapper = css`
     .view-more a:hover {
       color: #60a5fa;
     }
+
+    .transaction-item.error {
+      background: #2d1b1b;
+      border-color: #7f1d1d;
+    }
+
+    .transaction-item.loading {
+      background: #1e3a8a;
+      border-color: #1e40af;
+    }
+
+    .transaction-item.failed {
+      background: #2d1b1b;
+      border-color: #7f1d1d;
+    }
+
+    .retry-button {
+      background: #3b82f6;
+      color: white;
+    }
+
+    .retry-button:hover:not(:disabled) {
+      background: #2563eb;
+    }
+
+    .retry-button:disabled {
+      background: #4b5563;
+    }
   }
 
   /* Network Selector Button Styles */
@@ -640,6 +724,43 @@ export const dropdownWrapper = css`
     top: 100%;
     left: 0;
     z-index: 1000;
+  }
+
+  /* Mobile responsive styles for network selector */
+  @media screen and (max-width: 768px) {
+    .network-btn {
+      width: 100%;
+      max-width: 280px;
+      min-width: 200px;
+    }
+
+    .network-dropdown {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      max-height: 80vh;
+      border-radius: 20px 20px 0 0;
+      margin-top: 0;
+      top: auto;
+      transform: translateY(100%);
+      transition: transform 0.3s ease;
+    }
+
+    .network-dropdown.show {
+      transform: translateY(0);
+    }
+
+    .network-dropdown-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 850;
+    }
   }
 
   .network-dropdown-header {

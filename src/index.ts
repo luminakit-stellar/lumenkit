@@ -7,6 +7,7 @@ export { StellarReviewTransactionButton, ReviewButtonThemes } from './components
 export { StellarNetworkSelectorButton, NetworkSelectorThemes } from './components/network-selector-button/stellar-network-selector-button';
 export * from './types';
 export * from './utils';
+export { setNetwork } from './state/store';
 
 export * from './modules/xbull.module';
 export * from './modules/freighter.module';
