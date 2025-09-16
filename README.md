@@ -21,8 +21,6 @@ A comprehensive TypeScript library for integrating multiple Stellar wallets into
 npm install @lumenkit/stellar-wallets
 # or
 yarn add @lumenkit
-# or
-pnpm add @lumenkit
 ```
 
 ### Basic Usage
